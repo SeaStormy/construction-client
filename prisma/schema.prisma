@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model WebsiteSettings {
+  id                Int      @id @default(1)
+  heroImage         String?
+  heroTitle         String?
+  heroDescription   String?
+  aboutTitle        String?
+  aboutDescription  String?
+  aboutImage        String?
+  contactEmail      String?
+  contactPhone      String?
+  contactAddress    String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+} 
