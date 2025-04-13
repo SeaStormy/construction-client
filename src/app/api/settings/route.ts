@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI || '';
 const client = new MongoClient(uri);
@@ -12,14 +12,13 @@ export async function POST(request: Request) {
     const db = client.db('construction-company');
     const settings = db.collection('settings');
 
-    // Update or create settings
-    await settings.updateOne(
-      { _id: new ObjectId('website') },
-      { $set: data },
-      { upsert: true }
-    );
+    // Create a new settings document
+    const result = await settings.insertOne(data);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      id: result.insertedId,
+    });
   } catch (error) {
     console.error('Error updating settings:', error);
     return NextResponse.json(
@@ -37,8 +36,10 @@ export async function GET() {
     const db = client.db('construction-company');
     const settings = db.collection('settings');
 
-    const result = await settings.findOne({ _id: new ObjectId('website') });
-    return NextResponse.json(result || {});
+    // Get the most recent settings
+    const result = await settings.find().sort({ _id: -1 }).limit(1).toArray();
+
+    return NextResponse.json(result[0] || {});
   } catch (error) {
     console.error('Error fetching settings:', error);
     return NextResponse.json(
