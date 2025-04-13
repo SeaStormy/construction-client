@@ -152,6 +152,7 @@ export default function SettingsPage() {
                     fill
                     className="object-cover rounded-lg"
                     priority
+                    unoptimized
                   />
                 </div>
               )}
@@ -205,6 +206,7 @@ export default function SettingsPage() {
                         fill
                         className="object-cover rounded-lg"
                         priority
+                        unoptimized
                       />
                     </div>
                   )}
@@ -256,6 +258,7 @@ export default function SettingsPage() {
                         fill
                         className="object-cover rounded-lg"
                         priority
+                        unoptimized
                       />
                     </div>
                   )}
@@ -307,6 +310,7 @@ export default function SettingsPage() {
                         fill
                         className="object-cover rounded-lg"
                         priority
+                        unoptimized
                       />
                     </div>
                   )}
@@ -360,6 +364,7 @@ export default function SettingsPage() {
                     fill
                     className="object-cover rounded-lg"
                     priority
+                    unoptimized
                   />
                 </div>
               )}
