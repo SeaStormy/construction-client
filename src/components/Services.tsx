@@ -70,6 +70,7 @@ export default function Services() {
                     alt={service.title}
                     fill
                     style={{ objectFit: 'cover' }}
+                    unoptimized
                   />
                 ) : (
                   <div className="h-full w-full bg-gray-200" />
