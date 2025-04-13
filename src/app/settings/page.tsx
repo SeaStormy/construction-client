@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 
@@ -41,12 +40,12 @@ export default function SettingsPage() {
     useForm<WebsiteSettings>();
 
   useEffect(() => {
-    const fetchSettings = async () => {
+    const fetchSettings = () => {
       try {
         setIsLoading(true);
-        const response = await axios.get('/api/settings');
-        if (response.data) {
-          reset(response.data);
+        const savedSettings = localStorage.getItem('websiteSettings');
+        if (savedSettings) {
+          reset(JSON.parse(savedSettings));
         }
       } catch (error) {
         console.error('Error fetching settings:', error);
@@ -62,7 +61,7 @@ export default function SettingsPage() {
   const onSubmit = async (data: WebsiteSettings) => {
     try {
       setIsLoading(true);
-      await axios.post('/api/settings', data);
+      localStorage.setItem('websiteSettings', JSON.stringify(data));
       toast.success('Settings saved successfully!', {
         duration: 3000,
         position: 'top-right',
@@ -113,12 +112,16 @@ export default function SettingsPage() {
         process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ''
       );
 
-      const response = await axios.post(
+      const response = await fetch(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-        formData
+        {
+          method: 'POST',
+          body: formData,
+        }
       );
 
-      setValue(field as any, response.data.secure_url);
+      const data = await response.json();
+      setValue(field as any, data.secure_url);
       toast.success('Image uploaded successfully');
     } catch (error) {
       toast.error('Failed to upload image');
