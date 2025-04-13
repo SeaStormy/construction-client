@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { fetchSettings } from '@/utils/api';
 
 interface HeroSettings {
   heroImage: string;
@@ -20,15 +20,14 @@ export default function Hero() {
   });
 
   useEffect(() => {
-    const fetchSettings = async () => {
+    const loadSettings = async () => {
       try {
-        const response = await axios.get('/api/settings');
-        if (response.data) {
+        const data = await fetchSettings();
+        if (data) {
           setSettings({
-            heroImage: response.data.heroImage || '',
-            heroTitle: response.data.heroTitle || settings.heroTitle,
-            heroDescription:
-              response.data.heroDescription || settings.heroDescription,
+            heroImage: data.heroImage || '',
+            heroTitle: data.heroTitle || settings.heroTitle,
+            heroDescription: data.heroDescription || settings.heroDescription,
           });
         }
       } catch (error) {
@@ -36,7 +35,7 @@ export default function Hero() {
       }
     };
 
-    fetchSettings();
+    loadSettings();
   }, []);
 
   return (

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
-import axios from 'axios';
+import { fetchSettings, updateSettings } from '@/utils/api';
 
 interface WebsiteSettings {
   heroImage: string;
@@ -41,12 +41,12 @@ export default function SettingsPage() {
     useForm<WebsiteSettings>();
 
   useEffect(() => {
-    const fetchSettings = async () => {
+    const loadSettings = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get('/api/settings');
-        if (response.data) {
-          reset(response.data);
+        const settings = await fetchSettings();
+        if (settings) {
+          reset(settings);
         }
       } catch (error) {
         console.error('Error fetching settings:', error);
@@ -56,13 +56,13 @@ export default function SettingsPage() {
       }
     };
 
-    fetchSettings();
+    loadSettings();
   }, [reset]);
 
   const onSubmit = async (data: WebsiteSettings) => {
     try {
       setIsLoading(true);
-      await axios.post('/api/settings', data);
+      await updateSettings(data);
       toast.success('Settings saved successfully!', {
         duration: 3000,
         position: 'top-right',
